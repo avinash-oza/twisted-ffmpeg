@@ -22,7 +22,7 @@ def encode_video(input_file_path, output_file_name):
     urllib.urlretrieve(server_url + input_file_path, input_file_name)
     logging.info("Finished downloading {0}".format(input_file_path))
 
-    ffmpeg_args = ["ffmpeg", "-y", "-i", input_file_name, "-an", "-b:v 1024k", output_file_name]
+    ffmpeg_args = ["ffmpeg", "-y", "-i", input_file_name, "-an", "-b:v", "1024k", output_file_name]
     if not check_call(ffmpeg_args, shell=True):
         ftp = FTP(host=get_config_option("FTP Settings" , "host"), user=get_config_option("FTP Settings", "username") , passwd=get_config_option("FTP Settings" , "password"))
         ftp.cwd(root_dir)
