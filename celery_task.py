@@ -33,11 +33,12 @@ def encode_video(input_file_path, output_file_name):
             except error_perm:
                 ftp.mkd(d)                
                 ftp.cwd(d)
-        f = open(output_file_name, 'r')
+        f = open(output_file_name, 'rb')
         logging.info("Starting upload of {0} as {1}".format(output_file_name, input_file_name))
         ftp.storbinary('STOR ' + input_file_name, f)
         logging.info("Finished upload of {0} as {1}".format(output_file_name, input_file_name))
-
+        ftp.quit()
+        f.close()
         #Remove files after encoding them
         try:
             os.remove(input_file_name)
