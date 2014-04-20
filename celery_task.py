@@ -1,5 +1,6 @@
 from subprocess import check_call
 from ftplib import FTP,error_perm
+from urlparse import urljoin
 from celery import Celery
 import os
 import urllib
@@ -18,9 +19,11 @@ def encode_video(input_file_path, output_file_name):
     server_url = get_config_option("Download Settings", "server_url")
     root_dir = get_config_option("FTP Settings" , "root_dir")
     file_path, input_file_name = os.path.split(input_file_path)
-    logging.info("Downloading file {0} from {1}".format(input_file_path, server_url))
-    urllib.urlretrieve(server_url + input_file_path, input_file_name)
-    logging.info("Finished downloading {0}".format(input_file_path))
+    url = urljoin(server_url, input_file_path.lstrip("\\"))
+
+    logging.info("Downloading {0}".format(url))
+    urllib.urlretrieve(url, input_file_name)
+    logging.info("Finished downloading {0}".format(url))
 
     ffmpeg_args = ["ffmpeg", "-y", "-i", input_file_name, "-an", "-b:v", "1024k", output_file_name]
     if not check_call(ffmpeg_args, shell=True):

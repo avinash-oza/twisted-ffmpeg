@@ -8,5 +8,7 @@ for root, dirs, files in os.walk(root):
         for f in files:
            if f.endswith('.avi'):
                 the_file = os.path.join(root, f)
-                print("Adding {0} to list" .format(the_file))
-                encode_video(the_file, f + "-out")
+                the_path = os.path.splitdrive((the_file))
+                final_path = the_path[1].replace("\\", "/")
+                print("Adding {0} to list" .format(final_path))
+                encode_video(final_path, "OUTPUT_" + f)
