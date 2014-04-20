@@ -1,5 +1,4 @@
 PyYAML==3.11
-Twisted==13.2.0
 amqp==1.4.5
 anyjson==0.3.3
 argparse==1.2.1
@@ -12,4 +11,3 @@ kombu==3.0.15
 pytz==2014.2
 tornado==3.2
 wsgiref==0.1.2
-zope.interface==4.1.1
