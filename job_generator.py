@@ -5,6 +5,7 @@ from celery_task import encode_video
 
 root = sys.argv[1]
 num_jobs = 0
+#TODO: Accept a date at the command line to only add those jobs
 for root, dirs, files in os.walk(root):
     if len(files):
         for f in files:
