@@ -2,20 +2,33 @@ import os
 import sys
 import time
 from celery_task import encode_video
+import argparse
 
-root = sys.argv[1]
-num_jobs = 0
-#TODO: Accept a date at the command line to only add those jobs
-for root, dirs, files in os.walk(root):
-    if len(files):
-        for f in files:
-           if f.endswith('.avi'):
-                the_file = os.path.join(root, f)
-                the_path = os.path.splitdrive((the_file))
-                final_path = the_path[1].replace("\\", "/")
-                num_jobs += 1
-                if num_jobs % 10 == 0:
-                    print "Sleeping for 5 minutes"
-                    time.sleep(300)
-                print("Adding {0} to list" .format(final_path))
-                encode_video.delay(final_path, "OUTPUT_" + f)
+parser = argparse.ArgumentParser(description='Job Generator')
+parser.add_argument('--abs-dir', type=str,help='Specify the absolute path to the DVR directory.')
+parser.add_argument('--rel-dir', type=str,help='(NOT USED CURRENTLY)Specify the relative path to the DVR directory.')
+parser.add_argument('--date', type=str,help='The date we should process for only in YYYYMMDD format.')
+args = parser.parse_args()
+check_date_value=None
+if args.date is not None:
+    check_date_value = args.date
+
+if args.abs_dir is not None:
+    root = args.abs_dir
+    num_jobs = 0
+    #TODO: Actually implement the date feature
+    for root, dirs, files in os.walk(root):
+        if len(files):
+            for f in files:
+               if f.endswith('.avi'):
+                    the_file = os.path.join(root, f)
+                    the_path = os.path.splitdrive((the_file))
+                    final_path = the_path[1].replace("\\", "/")
+                    num_jobs += 1
+                    if num_jobs % 10 == 0:
+                        print "Sleeping for 5 minutes"
+                        time.sleep(300)
+                    print("Adding {0} to list" .format(final_path))
+                    encode_video.delay(final_path, "OUTPUT_" + f)
+else:
+    parser.print_help()
