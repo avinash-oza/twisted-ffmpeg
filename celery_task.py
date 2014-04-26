@@ -3,6 +3,7 @@ from ftplib import FTP,error_perm
 from urlparse import urljoin
 from celery import Celery
 import os
+import sys
 import urllib
 import re
 import logging
@@ -25,7 +26,13 @@ def encode_video(input_file_path, output_file_name):
     urllib.urlretrieve(url, input_file_name)
     logging.info("Finished downloading {0}".format(url))
 
-    ffmpeg_args = ["ffmpeg", "-y", "-i", input_file_name, "-an", "-b:v", "1024k", output_file_name]
+    ffmpeg_args = ["ffmpeg", "-y", "-i", input_file_name, "-an","-c:v", "libx264", "-b:v", "1024k", output_file_name]
+    
+    if sys.platform.startswith('linux'):
+        logging.info("Linux detected. Modifying command")
+        ffmpeg_args[0] = 'avconv'
+        ffmpeg_args = " ".join(ffmpeg_args)
+    
     if not check_call(ffmpeg_args, shell=True):
         ftp = FTP(host=get_config_option("FTP Settings" , "host"), user=get_config_option("FTP Settings", "username") , passwd=get_config_option("FTP Settings" , "password"))
         ftp.cwd(root_dir)
