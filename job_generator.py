@@ -19,13 +19,16 @@ ftp = FTP(host=get_config_option("FTP Settings" , "host"), user=get_config_optio
 
 if args.abs_dir is not None:
     root = args.abs_dir
-    num_jobs = 0
+    num_jobs = 1
     #TODO: Actually implement the date feature
     for root, dirs, files in os.walk(root):
         if len(files):
             file_list = []
             ftp.cwd("/" + get_config_option("FTP Settings" , "root_dir")) 
             try:
+                formatted_dir = os.path.splitdrive(root)[1]
+                formatted_dir = formatted_dir.replace("\\", "/")
+                formatted_dir = formatted_dir[1:] #We need to cut off the leading slash
                 ftp.cwd(root)
                 file_list = ftp.nlst()
             except error_perm:
@@ -36,13 +39,13 @@ if args.abs_dir is not None:
                     the_file = os.path.join(root, f)
                     the_path = os.path.splitdrive((the_file))
                     final_path = the_path[1].replace("\\", "/")
-                    num_jobs += 1
                     if num_jobs % 10 == 0:
-                        print "Sleeping for 5 minutes"
-                        time.sleep(300)
+                        print "Sleeping for 10 minutes"
+                        time.sleep(600)
                     if f not in file_list:
-                        print("Adding {0} to list" .format(final_path))
-#                       encode_video.delay(final_path, "OUTPUT_" + f)
+                        print("{0} -> Adding {1} to list" .format(num_jobs, final_path))
+                        encode_video.delay(final_path, "OUTPUT_" + f)
+                        num_jobs += 1 #Dont increment unless we actually added a job
                     else:
                         print("{0} ALREADY EXISTS REMOTLEY" .format(final_path))
     ftp.quit()
