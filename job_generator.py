@@ -29,7 +29,7 @@ if args.abs_dir is not None:
                 formatted_dir = os.path.splitdrive(root)[1]
                 formatted_dir = formatted_dir.replace("\\", "/")
                 formatted_dir = formatted_dir[1:] #We need to cut off the leading slash
-                ftp.cwd(root)
+                ftp.cwd(formatted_dir)
                 file_list = ftp.nlst()
             except error_perm:
                 # The directory may not even exist if this is a new day
