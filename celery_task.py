@@ -7,6 +7,8 @@ import sys
 import urllib
 import re
 import logging
+import random
+import time
 from utils import get_config_option
 
 logging.basicConfig(format= '%(asctime)s ' + "Encoder " +  '%(message)s', level=logging.DEBUG)
@@ -23,8 +25,15 @@ def encode_video(input_file_path, output_file_name):
     url = urljoin(server_url, input_file_path.lstrip("\\"))
 
     logging.info("Downloading {0}".format(url))
-    urllib.urlretrieve(url, input_file_name)
-    logging.info("Finished downloading {0}".format(url))
+    try:
+        urllib.urlretrieve(url, input_file_name)
+        logging.info("Finished downloading {0}".format(url))
+    except IOError:
+        delay = random.randrange(40) 
+        logging.info("Seems like server is overloaded. Retrying in {0} seconds.".format(delay))
+        time.sleep(delay)
+        urllib.urlretrieve(url, input_file_name)
+        logging.info("Finished downloading {0}".format(url))
 
     ffmpeg_args = ["ffmpeg", "-y", "-i", input_file_name, "-an","-c:v", "libx264", "-b:v", "1024k", output_file_name]
     
