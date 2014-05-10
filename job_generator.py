@@ -1,7 +1,7 @@
 import os
 import sys
 import time
-from ftplib import FTP,error_perm
+from ftplib import FTP,error_perm,error_temp
 from celery_task import encode_video
 import argparse
 from utils import get_config_option
@@ -47,7 +47,8 @@ if args.abs_dir is not None:
                         encode_video.delay(final_path, "OUTPUT_" + f)
                         num_jobs += 1 #Dont increment unless we actually added a job
                     else:
-                        print("{0} ALREADY EXISTS REMOTLEY" .format(final_path))
+                        print("{0} ALREADY EXISTS REMOTELY. REMOVING LOCALLY." .format(final_path))
+                        os.remove(os.path.join(root, f))
     ftp.quit()
 else:
     parser.print_help()
