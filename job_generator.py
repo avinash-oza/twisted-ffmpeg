@@ -52,6 +52,9 @@ def generate_jobs(abs_dir):
                         else:
                             print("{0} ALREADY EXISTS REMOTELY. REMOVING LOCALLY." .format(final_path))
                             os.remove(os.path.join(root, f))
+            elif not os.listdir(root):
+                print("{0} is empty. Removing directory").format(root)
+                os.rmdir(root)
         ftp.quit()
 
 if __name__ == '__main__':
