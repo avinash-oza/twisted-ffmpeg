@@ -65,7 +65,7 @@ if __name__ == '__main__':
 
     if args.clean_old:
         clean_old = True
-        import ipdb; ipdb.set_trace()
+#       import ipdb; ipdb.set_trace()
     if args.date is not None:
         check_date_value = args.date
     if args.abs_dir is not None:
