@@ -1,7 +1,6 @@
 import os
 import datetime
 from file_description import FileDescription
-#Test
 
 class DefaultParser(object):
     #TODO: Make an abstract base class showing the interface
