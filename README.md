@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/avinash-oza/twisted-ffmpeg.svg?branch=v1.0.x)](https://travis-ci.org/avinash-oza/twisted-ffmpeg)
 # Celery-FFmpeg
 Though the project name is currently twisted-ffmpeg, the goal of this project is to distribute encoding of media files over a local network.
 
