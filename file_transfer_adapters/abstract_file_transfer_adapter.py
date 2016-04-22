@@ -26,23 +26,22 @@ class AbstractFileTransferAdapter(object):
     def put_file(self, file_description):
         """TBD: Give the file description and the original source path, this method will transfer the file remotely"""
     
-    @abstractmethod
-    def _get_config_file_name(self):
-        """Returns the name of the config file to look for in configs/"""
+    def _get_config_file_section(self):
+        """Returns the name of the section of the configuration for parameters"""
+        return self.__class__.__name__
 
     def _load_configuration_file(self):
         current_working_directory = os.getcwd()
-        full_path = os.path.join(current_working_directory, "file_transfer_adapters", 'configs')
-        config_file_path = os.path.join(full_path, self._get_config_file_name())
+        full_path = os.path.join(current_working_directory, 'twisted-ffmpeg.cfg')
 
         log.info("Opening configuration at {0}".format(config_file_path))
         with open(config_file_path, 'rb') as config_file:
             self.config.readfp(config_file)
 
-    def _get_config_option(self, section, field):
+    def _get_config_option(self,field):
         ret = ""
         try:
-            ret = config.get(section,option)
+            ret = config.get(self._get_config_file_section(),option)
         except NoOptionError:
             #value does not exist
             log.warning("Value does not exist for section {0} and option {1}".format(section, option))
