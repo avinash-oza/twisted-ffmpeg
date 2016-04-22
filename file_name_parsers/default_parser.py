@@ -1,9 +1,9 @@
 import os
 import datetime
 from file_description import FileDescription
+from abstract_parser import AbstractParser
 
-class DefaultParser(object):
-    #TODO: Make an abstract base class showing the interface
+class DefaultParser(AbstractParser):
     def __init__(self):
         pass
 
