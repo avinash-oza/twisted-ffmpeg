@@ -9,7 +9,7 @@ from collections import namedtuple
 from ConfigParser import RawConfigParser, NoOptionError
 from file_name_parsers.file_description import FileDescription
 
-log = logging.getLogger(__name__)
+log=logging.getLogger(__name__)
 
 class AbstractFileTransferAdapter(object):
     __metaclass__ = ABCMeta
