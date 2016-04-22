@@ -41,7 +41,7 @@ class AbstractFileTransferAdapter(object):
     def _get_config_option(self,field):
         ret = ""
         try:
-            ret = config.get(self._get_config_file_section(),option)
+            ret = config.get(self._get_config_file_section(), option)
         except NoOptionError:
             #value does not exist
             log.warning("Value does not exist for section {0} and option {1}".format(section, option))
