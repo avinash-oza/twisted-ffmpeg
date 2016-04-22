@@ -1,9 +1,11 @@
 import os
 import datetime
-from abc import abstractmethod
+from abc import ABCMeta, abstractmethod
 from file_description import FileDescription
 
 class AbstractParser(object):
+    __metaclass__ = ABCMeta
+
     def parse_path(self, file_path_string):
         """Entry method. This will call the parsing functions in a sequence which will extract what we need"""
         file_name = self._extract_file_name(file_path_string)
