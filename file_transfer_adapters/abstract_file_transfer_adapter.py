@@ -25,6 +25,17 @@ class AbstractFileTransferAdapter(object):
     @abstractmethod
     def put_file(self, file_description):
         """TBD: Give the file description and the original source path, this method will transfer the file remotely"""
+
+    def clean_up(self, file_description):
+        """Given a file description, this cleans up the file from the location"""
+        try:
+            self._clean_up(file_description)
+        except Exception as e:
+            log.error("Hit exception while trying to clean up file {0}: {1}".format(file_description.file_name, e)
+
+    @abstractmethod
+    def _clean_up(self, file_description):
+        
     
     def _get_config_file_section(self):
         """Returns the name of the section of the configuration for parameters"""

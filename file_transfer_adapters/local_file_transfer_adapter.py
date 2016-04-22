@@ -14,3 +14,6 @@ class LocalFileTransferAdapter(AbstractFileTransferAdapter):
     def put_file(self, file_description):
         pass
 
+    def _clean_up(self, file_description):
+        pass
+
