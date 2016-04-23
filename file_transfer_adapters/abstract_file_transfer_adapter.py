@@ -8,6 +8,7 @@ from abc import ABCMeta, abstractmethod
 from collections import namedtuple
 from ConfigParser import RawConfigParser, NoOptionError
 from file_name_parsers.file_description import FileDescription
+from application_config import ApplicationConfig
 
 log=logging.getLogger(__name__)
 
@@ -15,8 +16,7 @@ class AbstractFileTransferAdapter(object):
     __metaclass__ = ABCMeta
 
     def __init__(self):
-       self.config = RawConfigParser(allow_no_value=True)
-       self._load_configuration_file()
+       self.config = ApplicationConfig()
 
     @abstractmethod
     def get_file(self, file_description):
@@ -41,20 +41,6 @@ class AbstractFileTransferAdapter(object):
         """Returns the name of the section of the configuration for parameters"""
         return self.__class__.__name__
 
-    def _load_configuration_file(self):
-        current_working_directory = os.getcwd()
-        full_path = os.path.join(current_working_directory, 'twisted-ffmpeg.cfg')
-
-        log.info("Opening configuration at {0}".format(config_file_path))
-        with open(config_file_path, 'rb') as config_file:
-            self.config.readfp(config_file)
-
-    def _get_config_option(self,field):
-        ret = ""
-        try:
-            ret = config.get(self._get_config_file_section(), option)
-        except NoOptionError:
-            #value does not exist
-            log.warning("Value does not exist for section {0} and option {1}".format(section, option))
-        return ret
+    def _get_config_option(self, field):
+        return self.config.get_config_option(self._get_config_file_section(), field)
 
