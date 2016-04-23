@@ -30,7 +30,7 @@ class AbstractFileTransferAdapter(object):
         try:
             self._clean_up(file_description)
         except Exception as e:
-            log.error("Hit exception while trying to clean up file {0}: {1}".format(file_description.file_name, e)
+            log.error("Hit exception while trying to clean up file {0}: {1}".format(file_description.file_name, e))
 
     @abstractmethod
     def _clean_up(self, file_description):

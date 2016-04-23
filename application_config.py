@@ -1,5 +1,5 @@
 from ConfigParser import RawConfigParser, NoOptionError
-import io
+import os
 import logging
 log=logging.getLogger(__name__)
 
@@ -9,14 +9,14 @@ class ApplicationConfig(object):
 
     def _load_config(self, config_file_name):
         config = RawConfigParser(allow_no_value=True)
-        with open(config_file_name, 'rb' as config_file:
+        with open(config_file_name, 'rb') as config_file:
             config.readfp(config_file)
 
         return config
 
-     def get_config_option(self, section, option):
-         ret = ""
-         try:
+    def get_config_option(self, section, option):
+        ret = ""
+        try:
             ret = self.config.get(section,option)
         except NoOptionError:
             #value does not exist
