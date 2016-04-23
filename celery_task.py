@@ -9,10 +9,11 @@ import re
 import logging
 import random
 import time
-from utils import get_config_option
 
 logging.basicConfig(format= '%(asctime)s ' + "Encoder " +  '%(message)s', level=logging.DEBUG)
-app = Celery('tasks', broker=get_config_option('General', 'broker_url'))
+#app = Celery('tasks', broker=get_config_option('General', 'broker_url'))
+#TODO: Fix this
+app = Celery('tasks', broker='1111')
 
 @app.task
 def celery_encoder(file_description, file_encoder, file_get_adapter, file_push_adapter=None):
