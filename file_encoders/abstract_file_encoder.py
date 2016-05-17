@@ -12,6 +12,9 @@ from application_config import ApplicationConfig
 
 log=logging.getLogger(__name__)
 
+class EncoderException(Exception):
+    pass
+
 class AbstractFileEncoder(object):
     __metaclass__ = ABCMeta
 
@@ -20,7 +23,7 @@ class AbstractFileEncoder(object):
 
     @abstractmethod
     def encode_video(self, file_description):
-        """Encodes a file given a FileDescription tuple"""
+        """Encodes a file given a FileDescription tuple. Should return the full path of the encoded file"""
 
     def _get_config_file_section(self):
         """Returns the name of the section of the configuration for parameters"""
