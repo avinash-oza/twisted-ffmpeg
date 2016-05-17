@@ -15,6 +15,10 @@ log = logging.getLogger(__name__)
 
 class FFmpegFileEncoder(AbstractFileEncoder):
     def encode_video(self, file_description):
-        log.info("Called encode_video")
-
+        ffmpeg_command = self._get_config_option("ffmpeg_bin")
+        ffmpeg_options = self._get_config_option("ffmpeg_options")
+        command_to_run = "{0} {1}".format(ffmpeg_command, ffmpeg_options)
+        log.info("Command to be invoked to run encoding: {0}".format(command_to_run))
+        #TODO: Maybe subproc this or redirect log
+        ret_value = os.system(command_to_run)
     
