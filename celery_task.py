@@ -9,11 +9,14 @@ import re
 import logging
 import random
 import time
+from file_name_parsers.default_parser import DefaultParser
+from application_config import ApplicationConfig
+from file_encoders.ffmpeg_file_encoder import FFmpegFileEncoder
 
 logging.basicConfig(format= '%(asctime)s ' + "Encoder " +  '%(message)s', level=logging.DEBUG)
 #app = Celery('tasks', broker=get_config_option('General', 'broker_url'))
 #TODO: Fix this
-app = Celery('tasks', broker='1111')
+app = Celery('celery_task', broker='amqp://guest@127.0.0.1:5672//', include=['file_transfer_adapters'])
 
 @app.task
 def celery_encoder(file_description, file_encoder, file_get_adapter, file_push_adapter=None):
@@ -44,14 +47,16 @@ class CeleryEncoder(object):
 
         #TODO: This needs to be verified
         try:
-            self.file_encoder.encode_file(file_description)
+            # Overwrite the file_description object with one that has the output_file_name populated
+            file_description = self.file_encoder.encode_video(file_description)
         except Exception as e:
             logging.error("Hit exception encoding {0} : {1}".format(file_description.file_name, e))
 
         else:
-            logging.info("Start upload of {0}".format(file_description.file_name))
+            logging.info("Output file written to {0}".format(file_description.output_file_name))
+            logging.info("Start upload of {0}".format(file_description.output_file_name))
             self.file_push_adapter.put_file(file_description)
-            logging.info("Finished upload of {0}".format(file_description.file_name))
+            logging.info("Finished upload of {0}".format(file_description.output_file_name))
             self.file_get_adapter.clean_up(file_description)
 
 #       server_url = get_config_option("Download Settings", "server_url")
@@ -108,4 +113,24 @@ class CeleryEncoder(object):
 #           else:
 #           logging.info("Removed {0}".format(output_file_name))
 if __name__ == "__main__":
-    pass
+    import importlib
+    import sys
+    config = ApplicationConfig()
+    #TODO: Maybe put this into a method
+    file_get_adapter_module_name = config.get_config_option('Default', 'file_get_adapter_module')
+    file_get_adapter_module_path = '.'.join(['file_transfer_adapters', file_get_adapter_module_name])
+
+    file_get_adapter_module = importlib.import_module(file_get_adapter_module_path)
+
+    file_get_adapter_class_name = config.get_config_option('Default', 'file_get_adapter_klass')
+    file_get_adapter_class= getattr(file_get_adapter_module, file_get_adapter_class_name)()
+
+    file_paths_to_process = file_get_adapter_class.get_file_paths()
+    parser = DefaultParser()
+    file_encoder = FFmpegFileEncoder()
+
+    file_descriptions = [parser.parse_path(path) for path in file_paths_to_process]
+
+    print file_descriptions
+    for file_description in file_descriptions:
+        celery_encoder.delay(file_description, file_encoder, file_get_adapter_class)
