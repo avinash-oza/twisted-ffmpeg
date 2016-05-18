@@ -26,6 +26,10 @@ class AbstractFileTransferAdapter(object):
     def put_file(self, file_description):
         """TBD: Give the file description and the original source path, this method will transfer the file remotely"""
 
+    @abstractmethod
+    def get_file_paths(self):
+        """This method should return a list of full paths to files that should be encoded"""
+
     def clean_up(self, file_description):
         try:
             self._clean_up(file_description)
