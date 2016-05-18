@@ -22,6 +22,6 @@ class FFmpegFileEncoderTestCase(unittest.TestCase):
         assert True
 
     def test_encode_video(self):
-        self.test_class.encode_video(self.file_description)
+        self.test_class.encode_video(self.file_description, Dingus('staging_directory'))
         
 
