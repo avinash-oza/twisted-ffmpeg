@@ -22,7 +22,7 @@ class FFmpegFileEncoder(AbstractFileEncoder):
         input_file_full_path = os.path.join(file_description.full_source_path, file_description.file_name)
 
         output_file_name = self._get_output_file_name(file_description)
-        file_description = file_description._replace(output_file_name=output_file_name)
+        file_description = self._add_output_file_name_to_file_description(self, file_description, output_file_name)
 
         output_file_full_path = os.path.join(file_description.full_source_path, file_description.output_file_name)
 
@@ -53,4 +53,8 @@ class FFmpegFileEncoder(AbstractFileEncoder):
                                               segment_date=segment_date,
                                               start_time=start_time,
                                               end_time=end_time)
+
+    def _add_output_file_name_to_file_description(self, file_description, output_file_name):
+        return file_description._replace(output_file_name=output_file_name)
+
     
