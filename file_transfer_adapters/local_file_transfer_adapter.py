@@ -3,11 +3,11 @@ A simple adapter which takes the source file and puts it in another location on 
 """
 import logging
 import os
+import shutil
 from abc import abstractmethod
 from file_name_parsers.file_description import FileDescription
 from file_transfer_adapters.abstract_file_transfer_adapter import AbstractFileTransferAdapter
 log = logging.getLogger(__name__)
-logging.basicConfig(format= '%(asctime)s ' + "Encoder " +  '%(message)s', level=logging.DEBUG)
 
 class LocalFileTransferAdapter(AbstractFileTransferAdapter):
     def get_file(self, file_description):
@@ -15,12 +15,23 @@ class LocalFileTransferAdapter(AbstractFileTransferAdapter):
         pass
 
     def put_file(self, file_description):
-        log.info("Calling put_file")
-        pass
+        put_file_directory = self._get_config_option('put_file_directory')
+        full_output_file_path = os.path.join(file_description.full_source_path, file_description.output_file_name)
+        try:
+            shutil.copy(full_output_file_path, put_file_directory)
+        except Exception as e:
+            log.exception(e)
 
     def _clean_up(self, file_description):
-        log.info("Calling _clean_up")
-        pass
+        full_input_file_path = os.path.join(file_description.full_source_path, file_description.file_name)
+        full_output_file_path = os.path.join(file_description.full_source_path, file_description.output_file_name)
+
+        try:
+            os.remove(full_input_file_path)
+            os.remove(full_output_file_path)
+        except OSError as e:
+            log.exception(e)
+
 
     def get_file_paths(self):
         final_file_paths = []
