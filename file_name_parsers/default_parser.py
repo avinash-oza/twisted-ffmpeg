@@ -15,12 +15,18 @@ class DefaultParser(AbstractParser):
         time_period_start = self._extract_time_period_start(file_path_string)
         time_period_end = self._extract_time_period_end(file_path_string)
         ip_address = self._extract_ip_address(file_path_string)
+        full_source_path = self._extract_file_source_path(file_path_string)
         return FileDescription(file_name=file_name,
                                channel = channel,
                                time_period_start=time_period_start,
                                time_period_end=time_period_end,
                                segment_date=segment_date,
-                               ip_address=ip_address)
+                               ip_address=ip_address,
+                               full_source_path=full_source_path)
+
+    def _extract_file_source_path(self, file_path_string):
+        head, file_name = os.path.split(file_path_string)
+        return head
 
     def _extract_file_name(self, file_path_string):
         head, file_name = os.path.split(file_path_string)
