@@ -17,6 +17,10 @@ class LocalFileTransferAdapter(AbstractFileTransferAdapter):
     def put_file(self, file_description):
         put_file_directory = self._get_config_option('put_file_directory')
         full_output_file_path = os.path.join(file_description.full_source_path, file_description.output_file_name)
+        #TODO: Maybe refactor this out
+        if not os.path.isdir(put_file_directory):
+            log.warning("Directory {0} does not exist. Attempting to create".format(put_file_directory))
+            os.mkdir(put_file_directory)
         try:
             shutil.copy(full_output_file_path, put_file_directory)
         except Exception as e:
