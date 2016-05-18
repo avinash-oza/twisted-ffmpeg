@@ -10,5 +10,6 @@ dingus==0.3.4
 #ipython==2.0.0
 kombu==3.0.15
 pytz==2014.2
+bottle==0.12.9
 #tornado==3.2
 #wsgiref==-2.1.2
