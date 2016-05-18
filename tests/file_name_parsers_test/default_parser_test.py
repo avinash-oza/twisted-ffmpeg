@@ -29,6 +29,9 @@ class DefaultParserTestCase(unittest.TestCase):
     def test__extract_ip_address(self):
         self.assertEqual(self.parser._extract_ip_address(self.test_path), '172.16.1.46')
 
+    def test__extract_file_source_path(self):
+        self.assertEqual(self.parser._extract_file_source_path(self.test_path), '/mnt/raid0/DVR/172.16.1.46/CH1/20160415')
+
 if __name__ == '__main__':
     unittest.main()
 
