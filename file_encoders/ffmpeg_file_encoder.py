@@ -14,17 +14,18 @@ log = logging.getLogger(__name__)
 
 
 class FFmpegFileEncoder(AbstractFileEncoder):
-    def encode_video(self, file_description):
+    def encode_video(self, file_description, staging_directory):
         ffmpeg_command = self._get_config_option("ffmpeg_bin")
         ffmpeg_options = self._get_config_option("ffmpeg_options")
 
 
-        input_file_full_path = os.path.join(file_description.full_source_path, file_description.file_name)
+        input_file_full_path = os.path.join(staging_directory, file_description.file_name)
+#       input_file_full_path = os.path.join(file_description.full_source_path, file_description.file_name)
 
         output_file_name = self._get_output_file_name(file_description)
         file_description = self._add_output_file_name_to_file_description(file_description, output_file_name)
 
-        output_file_full_path = os.path.join(file_description.full_source_path, file_description.output_file_name)
+        output_file_full_path = os.path.join(staging_directory, file_description.output_file_name)
 
         ffmpeg_options = ffmpeg_options.format(input_file_name=input_file_full_path,
                                                output_file_name=output_file_full_path

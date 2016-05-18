@@ -10,7 +10,7 @@ from file_transfer_adapters.abstract_file_transfer_adapter import AbstractFileTr
 log = logging.getLogger(__name__)
 
 class LocalFileTransferAdapter(AbstractFileTransferAdapter):
-    def get_file(self, file_description):
+    def get_file(self, file_description, staging_directory):
         log.info("Calling get_file")
         pass
 

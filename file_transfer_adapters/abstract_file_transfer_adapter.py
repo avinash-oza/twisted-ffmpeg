@@ -19,11 +19,11 @@ class AbstractFileTransferAdapter(object):
        self.config = ApplicationConfig()
 
     @abstractmethod
-    def get_file(self, file_description):
+    def get_file(self, file_description, staging_directory):
         """TBD: Given a FileDescription, this figures out which file to obtain"""
 
     @abstractmethod
-    def put_file(self, file_description):
+    def put_file(self, file_description, staging_directory=None):
         """TBD: Give the file description and the original source path, this method will transfer the file remotely"""
 
     @abstractmethod

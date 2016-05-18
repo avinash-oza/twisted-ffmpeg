@@ -22,7 +22,7 @@ class AbstractFileEncoder(object):
        self.config = ApplicationConfig()
 
     @abstractmethod
-    def encode_video(self, file_description):
+    def encode_video(self, file_description, staging_directory):
         """Encodes a file given a FileDescription tuple. Should return the full path of the encoded file"""
 
     def _get_config_file_section(self):
