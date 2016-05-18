@@ -32,6 +32,15 @@ def get_file_list():
                     }
     return yaml.dump(final_results)
 
+@app.route('/get_file/<file_to_get:path>')
+def get_file(file_to_get):
+    config = ApplicationConfig('bottle_http_server.cfg')
+    file_root = config.get_config_option('Default', 'root_directory')
+
+    log.info("File to get is {0}".format(os.path.join(file_root,file_to_get)))
+
+
+
 
 
 run(app, host='localhost', port=8080)
