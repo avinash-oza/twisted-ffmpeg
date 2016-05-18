@@ -35,6 +35,8 @@ class CeleryEncoder(object):
         self.file_encoder = file_encoder
         self.file_get_adapter = file_get_adapter
         self.file_push_adapter = file_push_adapter if file_push_adapter else self.file_get_adapter
+        self.config = ApplicationConfig()
+
 
     def encode_video(self, file_description):
         """
@@ -43,12 +45,14 @@ class CeleryEncoder(object):
         # Retrieve our file and keep track of it
         #TODO: This needs to modify the source path to set it to the download directory
         logging.info("Start getting file {0} to local directory".format(file_description.file_name, "LOCAL DIRECTORY"))
-        self.file_get_adapter.get_file(file_description)
+
+        staging_directory = self.config.get_config_option('Default', 'staging_directory')
+        self.file_get_adapter.get_file(file_description, staging_directory)
 
         #TODO: This needs to be verified
         try:
             # Overwrite the file_description object with one that has the output_file_name populated
-            file_description = self.file_encoder.encode_video(file_description)
+            file_description = self.file_encoder.encode_video(file_description, staging_directory)
         except Exception as e:
             logging.error("Hit exception encoding {0} : {1}".format(file_description.file_name, e))
 
@@ -133,4 +137,4 @@ if __name__ == "__main__":
 
     print file_descriptions
     for file_description in file_descriptions:
-        celery_encoder.delay(file_description, file_encoder, file_get_adapter_class)
+        celery_encoder(file_description, file_encoder, file_get_adapter_class)
