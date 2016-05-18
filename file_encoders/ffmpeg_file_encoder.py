@@ -22,7 +22,9 @@ class FFmpegFileEncoder(AbstractFileEncoder):
         input_file_full_path = os.path.join(file_description.full_source_path, file_description.file_name)
 
         output_file_name = self._get_output_file_name(file_description)
-        output_file_full_path = os.path.join(file_description.full_source_path, output_file_name)
+        file_description = file_description._replace(output_file_name=output_file_name)
+
+        output_file_full_path = os.path.join(file_description.full_source_path, file_description.output_file_name)
 
         ffmpeg_options = ffmpeg_options.format(input_file_name=input_file_full_path,
                                                output_file_name=output_file_full_path
@@ -36,7 +38,7 @@ class FFmpegFileEncoder(AbstractFileEncoder):
             log.exception(e)
             raise EncoderException("Hit exception in encoder")
         else:
-            return output_file_full_path
+            return file_description
 
 
 
