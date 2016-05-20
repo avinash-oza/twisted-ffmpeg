@@ -5,7 +5,7 @@ import os
 import sys
 import logging
 import yaml
-from bottle import Bottle, run, request
+from bottle import Bottle, run, request, static_file
 from application_config import ApplicationConfig
 logging.basicConfig(format= '%(asctime)s ' + '%(message)s', level=logging.DEBUG)
 log = logging.getLogger(__name__)
@@ -17,15 +17,15 @@ def get_file_list():
     config = ApplicationConfig('bottle_http_server.cfg')
     file_root = config.get_config_option('Default', 'root_directory')
     log.info("file_root is {0}".format(file_root))
-#   addressing_scheme, network_location, path, query, fragment_identifier = request.urlparts
-#   log.info("Request url is {0}".format(network_location))
 
     final_file_paths = []
     for dir_path, _, filenames in os.walk(file_root):
         for filename in filenames:
             #TODO: Make this configurable
             if filename.endswith('.avi'):
-                final_file_paths.append(os.path.join(dir_path, filename))
+                # Strip out the base path so that it looks more like a relative path that can be used
+                base_path = dir_path.replace(file_root + os.sep, "")
+                final_file_paths.append(os.path.join(base_path, filename))
 
     final_results = {'number_of_entries' : len(final_file_paths),
                      'file_paths' : final_file_paths
@@ -37,8 +37,12 @@ def get_file(file_to_get):
     config = ApplicationConfig('bottle_http_server.cfg')
     file_root = config.get_config_option('Default', 'root_directory')
 
-    log.info("File to get is {0}".format(os.path.join(file_root,file_to_get)))
+    full_file_path = os.path.join(file_root, file_to_get)
+    log.info("Full file root {0}".format(full_file_path))
+    directory, file_name = os.path.split(full_file_path)
+    log.info("File to get is {0}    {1}".format(directory, file_name))
 
+    return static_file(file_name, root=directory)
 
 
 
