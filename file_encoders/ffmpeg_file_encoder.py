@@ -20,7 +20,6 @@ class FFmpegFileEncoder(AbstractFileEncoder):
 
 
         input_file_full_path = os.path.join(staging_directory, file_description.file_name)
-#       input_file_full_path = os.path.join(file_description.full_source_path, file_description.file_name)
 
         output_file_name = self._get_output_file_name(file_description)
         file_description = self._add_output_file_name_to_file_description(file_description, output_file_name)
@@ -40,8 +39,6 @@ class FFmpegFileEncoder(AbstractFileEncoder):
             raise EncoderException("Hit exception in encoder")
         else:
             return file_description
-
-
 
     def _get_output_file_name(self, file_description):
         """Given a file description, this constructs the file name to be written to after encoding"""
